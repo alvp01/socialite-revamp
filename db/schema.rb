@@ -10,9 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_18_150246) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_19_034344) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.text "content"
+    t.bigint "author_id", null: false
+    t.string "commentable_type"
+    t.bigint "commentable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_comments_on_author_id"
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
+  end
 
   create_table "group_memberships", force: :cascade do |t|
     t.bigint "group_id", null: false
@@ -32,6 +43,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_18_150246) do
     t.datetime "updated_at", null: false
     t.index ["admin_id"], name: "index_groups_on_admin_id"
     t.index ["name"], name: "index_groups_on_name", unique: true
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.text "content"
+    t.bigint "author_id", null: false
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_posts_on_author_id"
+    t.index ["group_id"], name: "index_posts_on_group_id"
   end
 
   create_table "user_follows", force: :cascade do |t|
@@ -60,7 +81,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_18_150246) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "comments", "users", column: "author_id"
   add_foreign_key "groups", "users", column: "admin_id"
+  add_foreign_key "posts", "groups"
+  add_foreign_key "posts", "users", column: "author_id"
   add_foreign_key "user_follows", "users", column: "followed_id"
   add_foreign_key "user_follows", "users", column: "follower_id"
 end
