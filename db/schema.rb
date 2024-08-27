@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_19_034344) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_19_100038) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -27,11 +27,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_19_034344) do
 
   create_table "group_memberships", force: :cascade do |t|
     t.bigint "group_id", null: false
-    t.bigint "user_id", null: false
+    t.bigint "member_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["group_id"], name: "index_group_memberships_on_group_id"
-    t.index ["user_id"], name: "index_group_memberships_on_user_id"
+    t.index ["member_id", "group_id"], name: "index_group_memberships_on_member_id_and_group_id", unique: true
+    t.index ["member_id"], name: "index_group_memberships_on_member_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -77,6 +78,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_19_034344) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "lastname", default: ""
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end

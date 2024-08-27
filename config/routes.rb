@@ -12,6 +12,15 @@ Rails.application.routes.draw do
     get 'sign_up',      to: 'devise/registrations#new'
   end
 
+  resources :posts, only: %i[create destroy] do
+    resources :comments, only: %i[create destroy]
+  end
+
+  resources :groups, only: %i[new create destroy show]
+
+  get '/users', to: 'users#index'
+  get '/:username', to: 'users#show', as: 'user'
+
   # Defines the root path route ("/")
-  root "devise/sessions#new"
+  root to: 'users#index'
 end

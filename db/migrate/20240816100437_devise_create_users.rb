@@ -8,7 +8,6 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.1]
       t.string :name,               null: false
       t.string :photo,              null: false, default: ''
       t.string :coverimage,         null: false, default: ''
-      
       t.string :email,              null: false, index: { unique: true }
       t.string :username,           null: false, index: { unique: true }
 
